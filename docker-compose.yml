@@ -105,24 +105,18 @@ services:
       <<: *healthcheck_defaults
       # From: https://stackoverflow.com/a/31877626/5155484
       test: echo stats | nc 127.0.0.1 11211
-  # From: https://github.com/getsentry/self-hosted/issues/1719
   redis:
     <<: *restart_policy
     image: "redis:6.2.14-alpine"
-    command: redis-server /usr/local/etc/redis/redis.conf
     healthcheck:
       <<: *healthcheck_defaults
       test: redis-cli ping | grep PONG
     volumes:
       - "sentry-redis:/data"
-<<<<<<< Updated upstream
       - type: bind
         read_only: true
         source: ./redis.conf
         target: /usr/local/etc/redis/redis.conf
-=======
-      - "/root/redis.conf:/usr/local/etc/redis/redis.conf"     
->>>>>>> Stashed changes
     ulimits:
       nofile:
         soft: 10032
@@ -150,7 +144,6 @@ services:
     <<: *restart_policy
     image: "confluentinc/cp-kafka:7.6.1"
     environment:
-<<<<<<< Updated upstream
       # https://docs.confluent.io/platform/current/installation/docker/config-reference.html#cp-kakfa-example
       KAFKA_PROCESS_ROLES: "broker,controller"
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1001@127.0.0.1:29093"
@@ -161,14 +154,9 @@ services:
       KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://127.0.0.1:29092,INTERNAL://kafka:9093,EXTERNAL://kafka:9092"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
       KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
-=======
-      KAFKA_CREATE_TOPICS: 'ingest-events:1:1:compact,retention.ms=86400000'
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092"
->>>>>>> Stashed changes
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: "1"
-      KAFKA_LOG_RETENTION_HOURS: "1"
+      KAFKA_LOG_RETENTION_HOURS: "24"
       KAFKA_MESSAGE_MAX_BYTES: "50000000" #50MB or bust
       KAFKA_MAX_REQUEST_SIZE: "50000000" #50MB on requests apparently too
       CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
@@ -478,10 +466,6 @@ services:
   relay:
     <<: *restart_policy
     image: "$RELAY_IMAGE"
-    deploy:
-      resources:
-        limits:
-          memory: 2G
     volumes:
       - type: bind
         read_only: true
