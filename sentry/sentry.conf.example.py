@@ -53,10 +53,6 @@ DATABASES = {
     }
 }
 
-# You should not change this setting after your database has been created
-# unless you have altered all schemas first
-SENTRY_USE_BIG_INTS = True
-
 # If you're expecting any kind of real traffic on Sentry, we highly recommend
 # configuring the CACHES and Redis settings
 
@@ -200,15 +196,6 @@ SENTRY_TAGSTORE_OPTIONS = {}
 
 SENTRY_DIGESTS = "sentry.digests.backends.redis.RedisBackend"
 
-###################
-# Metrics Backend #
-###################
-
-SENTRY_RELEASE_HEALTH = "sentry.release_health.metrics.MetricsReleaseHealthBackend"
-SENTRY_RELEASE_MONITOR = (
-    "sentry.release_health.release_monitor.metrics.MetricReleaseMonitorBackend"
-)
-
 ##############
 # Web Server #
 ##############
@@ -277,21 +264,17 @@ SENTRY_FEATURES.update(
         feature: True
         for feature in (
             "organizations:discover",
-            "organizations:events",
             "organizations:global-views",
             "organizations:incidents",
             "organizations:integrations-issue-basic",
             "organizations:integrations-issue-sync",
             "organizations:invite-members",
-            "organizations:metric-alert-builder-aggregate",
             "organizations:sso-basic",
             "organizations:sso-rippling",
             "organizations:sso-saml2",
             "organizations:performance-view",
             "organizations:advanced-search",
             "organizations:session-replay",
-            "organizations:session-replay-enable-canvas",
-            "organizations:session-replay-enable-canvas-replayer",
             "organizations:issue-platform",
             "organizations:profiling",
             "organizations:monitors",
@@ -311,20 +294,11 @@ SENTRY_FEATURES.update(
         )
         # Starfish related flags
         + (
-            "organizations:deprecate-fid-from-performance-score",
             "organizations:indexed-spans-extraction",
             "organizations:insights-entry-points",
             "organizations:insights-initial-modules",
             "organizations:insights-addon-modules",
-            "organizations:mobile-ttid-ttfd-contribution",
-            "organizations:performance-calculate-score-relay",
             "organizations:standalone-span-ingestion",
-            "organizations:starfish-browser-resource-module-image-view",
-            "organizations:starfish-browser-resource-module-ui",
-            "organizations:starfish-browser-webvitals",
-            "organizations:starfish-browser-webvitals-pageoverview-v2",
-            "organizations:starfish-browser-webvitals-replace-fid-with-inp",
-            "organizations:starfish-browser-webvitals-use-backend-scores",
             "organizations:starfish-mobile-appstart",
             "projects:span-metrics-extraction",
             "projects:span-metrics-extraction-addons",
